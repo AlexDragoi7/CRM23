@@ -1,16 +1,25 @@
-const http = require('http');
 const express = require('express');
+const sequelize = require('sequelize');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv').config();
 const db = require('./queries');
+const database = require('./app/models');
+const userRoutes = require('./app/routes/userRoutes');
 
-const port = 3300;
+const port = process.env.port || 3300;
 
 const app = express();
 app.use(express.json());
 
-app.get("/users", db.getAllUsers);
-app.get("/products", db.getAllProducts);
-app.get("/products/:user_id", db.getProdByUser);
+app.use(cookieParser());
 
-http.createServer(app).listen(port, () => {
+database.sequelize.sync({force:true}).then(() => {
+    console.log(`Database has been re synced`);
+})
+
+app.use('/users', userRoutes);  
+
+
+app.listen(port,() => {
     console.log(`Connected to port ${port}`);
 })

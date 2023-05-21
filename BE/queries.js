@@ -37,4 +37,19 @@ const getProdByUser = (req, res) => {
 
 }
 
-module.exports = {getAllUsers, getAllProducts, getProdByUser}; 
+const getLoggedInUser = (req, res) => {
+    const {email, password} = req.body;
+
+
+    pool.query("SELECT * FROM users WHERE email = $1 AND password = $2", [email, password], (error, result) => {
+        if(error){
+            throw error;
+        }
+        res.status(200).json(result.rows);
+    })  
+
+}
+
+
+
+module.exports = {getAllUsers, getAllProducts, getProdByUser, getLoggedInUser}; 
