@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-database.sequelize.sync({force:true}).then(() => {
+database.sequelize.sync({force:false}).then(() => {
     console.log(`Database has been re synced`);
 })
 
