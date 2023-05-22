@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config();
 const db = require('./queries');
 const database = require('./app/models');
 const userRoutes = require('./app/routes/userRoutes');
+const prodRoutes = require('./app/routes/productRoutes');
 
 const port = process.env.port || 3300;
 
@@ -17,7 +18,8 @@ database.sequelize.sync({force:false}).then(() => {
     console.log(`Database has been re synced`);
 })
 
-app.use('/users', userRoutes);  
+app.use('/users', userRoutes);
+app.use('/products', prodRoutes);
 
 
 app.listen(port,() => {

@@ -45,7 +45,7 @@ const login = async (req, res) => {
         if(user){
             const isSame = await bcrypt.compare(password, user.password);
             if(isSame){
-                let token = jwt.sign({id: user.user_id}, process.env.SECRETKEY, {
+                let token = jwt.sign({id: user.id}, process.env.SECRETKEY, {
                     expiresIn: 1 * 24 * 60 * 60 * 1000
                 });
 
