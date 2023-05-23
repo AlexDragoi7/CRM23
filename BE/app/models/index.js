@@ -1,6 +1,7 @@
 const {Sequelize, DataTypes} = require('sequelize');
+const dotenv = require('dotenv').config();
 
-const sequelize = new Sequelize(`postgres://crm:crm123@localhost:5432/crmdb`, {dialect: 'postgres'});
+const sequelize = new Sequelize(`postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@localhost:5432/crmdb`, {dialect: 'postgres'});
 
 sequelize.authenticate().then(() => {
     console.log(`Database is connected`)
