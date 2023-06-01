@@ -8,7 +8,7 @@ const prodDB = database.products;
 
 const createProduct = async (req, res, next) => {
     try{
-        const {product_name, product_description, product_quantity} = req.body;
+        const {product_name, product_description, product_quantity, category_id} = req.body;
 
         const {token} = req.cookies;
         const verify = await jwt.verify(token, process.env.SECRETKEY);
@@ -16,6 +16,7 @@ const createProduct = async (req, res, next) => {
 
         const data1 = {
             user_id: verify.id,
+            category_id,
             product_name,
             product_description,
             product_quantity,
@@ -37,7 +38,7 @@ const createProduct = async (req, res, next) => {
     
 }
 
-//Get all products - to do
+//Get all products - done
 
 const getAllProducts = async (req, res, next) => {
     try{
@@ -51,5 +52,7 @@ const getAllProducts = async (req, res, next) => {
         res.send(error);
     }
 }
+
+// 
 
 module.exports = {createProduct, getAllProducts};
