@@ -37,4 +37,19 @@ const createProduct = async (req, res, next) => {
     
 }
 
-module.exports = {createProduct};
+//Get all products - to do
+
+const getAllProducts = async (req, res, next) => {
+    try{
+        const allProds = await prodDB.findAll();
+        if(allProds){
+            res.status(200).json(allProds)
+        }else{
+            res.status(400).send(`No data available!`);
+        }
+    }catch(error){
+        res.send(error);
+    }
+}
+
+module.exports = {createProduct, getAllProducts};
