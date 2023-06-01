@@ -2,12 +2,15 @@ import { Container,Heading, Button, Card, CardBody, FormControl, FormLabel, Inpu
 import axios from 'axios';
 import { useEffect, useState } from "react"
 import { validateEmail } from '@/utils';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
     const [emailAddress, setEmailAddress] = useState("")
     const [password, setPassword] = useState("")
     const [isDisabled, setIsDisabled] = useState(true)
     const [isEmailInvalid, setIsEmailInvalid] = useState(false)
+
+    const router = useRouter();
 
     const handleEmailAddress = (event) => {
         setEmailAddress(event.target.value)
@@ -33,11 +36,14 @@ const Login = () => {
     const login = () => {
         const data = {
             email: emailAddress,
-            passoword: password
+            password: password
         }
         axios.post(`http://localhost:3300/users/login`, data)
           .then(function (response) {
-            console.log(response);
+            if(response && response.status == 201){
+                localStorage.setItem('accessToken',response.data.accessToken )
+                router.push('/products')
+            }
           })
           .catch(function (error) {
             console.log(error);

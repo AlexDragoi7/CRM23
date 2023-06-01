@@ -2,6 +2,7 @@ import { Container,Heading, Button, Card, CardBody, FormControl, FormLabel, Inpu
 import axios from 'axios';
 import { useEffect, useState } from "react"
 import { validateEmail } from '@/utils';
+import {useRouter} from "next/navigation"
 
 const Signup = () => {
     const [emailAddress, setEmailAddress] = useState("")
@@ -9,6 +10,8 @@ const Signup = () => {
     const [userFullName, setUserFullName] = useState("")
     const [isDisabled, setIsDisabled] = useState(true)
     const [isEmailInvalid, setIsEmailInvalid] = useState(false)
+
+    const router = useRouter()
 
     const handleEmailAddress = (event) => {
         setEmailAddress(event.target.value)
@@ -38,13 +41,16 @@ const Signup = () => {
     const signup = () => {
         const data = {
             email: emailAddress,
-            passoword: password,
+            password: password,
             user_name: userFullName
         }
         console.log("DATA", data)
         axios.post(`http://localhost:3300/users/signup`, data)
           .then(function (response) {
             console.log(response);
+            if(response && response.status == 201){
+                router.push("/login")
+            }
           })
           .catch(function (error) {
             console.log(error);
