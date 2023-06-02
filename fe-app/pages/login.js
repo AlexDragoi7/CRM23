@@ -42,6 +42,7 @@ const Login = () => {
           .then(function (response) {
             if(response && response.status == 201){
                 localStorage.setItem('accessToken',response.data.accessToken )
+                document.cookie=`token=${response.data.accessToken}`
                 router.push('/products')
             }
           })
