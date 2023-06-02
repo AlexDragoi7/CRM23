@@ -13,7 +13,18 @@ const Products = () => {
       
     const getAllProducts = async () => {
         const config = {
-          withCredentials: true
+            withCredentials: true,
+        };
+        await axios.get("http://localhost:3300/products", config).then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const getAllCategories = async () => {
+        const config = {
+            withCredentials: true,
         };
         await axios.get("http://localhost:3300/categories", config).then((response) => {
             console.log(response)
@@ -27,6 +38,7 @@ const Products = () => {
             router.push('/login')
         } else {
             getAllProducts()
+            getAllCategories()
         }
     }, [token])
 
