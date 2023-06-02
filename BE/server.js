@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({origin: true, credentials: true}));
 
 database.sequelize.sync({force:false}).then(() => {
     console.log(`Database has been re synced`);
