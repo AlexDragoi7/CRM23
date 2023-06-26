@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const database = require("../models");
 const jwt = require('jsonwebtoken');
 
+
+
 const users = database.users;
 
 const signup = async (req, res) => {
@@ -32,6 +34,38 @@ const signup = async (req, res) => {
         console.error(error);
     }
 };
+
+const resetPassword = async (req, res) => {
+    try{
+        const {new_password} = req.body;
+        
+        const {token} = req.cookies;
+        const verify = await jwt.verify(token, process.env.SECRETKEY)
+
+    
+
+        const data = {
+            password: await bcrypt.hash(new_password, 10)
+        }
+
+        const updatedPass = await users.update({
+            password: data.password
+        }, {
+            where: {id: verify.id}
+        })
+
+        if(updatedPass){
+            return res.status(200).json({
+                message: "Updated password"
+            });
+        }else{
+            return res.status(404).send("Error")
+        }
+
+    }catch(err){
+        console.error(err)
+    }
+}
 
 const login = async (req, res) => {
     try{
@@ -83,4 +117,4 @@ const getAllUsers = async (req, res, next) => {
     }
 };
 
-module.exports = {signup, login, getAllUsers};
+module.exports = {signup, login, getAllUsers, resetPassword};

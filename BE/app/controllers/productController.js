@@ -53,6 +53,52 @@ const getAllProducts = async (req, res, next) => {
     }
 }
 
+const getProductById = async (req, res, next) => {
+    try{
+        const prodById = await prodDB.findOne({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        if(prodById){
+            res.status(200).json(prodById)
+        }else{
+            res.status(404).send("Product unavailable")
+        }
+    }catch(err){
+        console.error(err)
+    }
+}
+
+const updateProduct = async (req, res) => {
+    try{
+
+        const {product_name, product_description, product_quantity} = req.body;
+
+        
+
+        const updatedProd = await prodDB.update({
+            product_name: product_name,
+            product_description: product_description,
+            product_quantity: product_quantity
+        }, {
+            where: {id: req.params.id}
+        })
+
+        if(updatedProd){
+            res.status(200).json({
+                message: `Product updated`
+            })
+        }else{
+            res.status(404).send("Product cannot be updated")
+        }
+
+    }catch(err){
+        console.error(err)
+    }
+}
+
 // 
 
-module.exports = {createProduct, getAllProducts};
+module.exports = {createProduct, getAllProducts, getProductById, updateProduct};
