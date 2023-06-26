@@ -99,6 +99,28 @@ const updateProduct = async (req, res) => {
     }
 }
 
+const deleteProduct = async (req, res) => {
+    try{
+
+        const deletedProd = await prodDB.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        if(deletedProd){
+            res.status(200).json({
+                message: "Product removed"
+            })
+        }else{
+            res.status(404).send("Deleting error")
+        }
+
+    }catch(err){
+        console.error(err)
+    }
+}
+
 // 
 
-module.exports = {createProduct, getAllProducts, getProductById, updateProduct};
+module.exports = {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct};
