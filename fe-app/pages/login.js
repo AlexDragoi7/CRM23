@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useEffect, useState } from "react"
 import { validateEmail } from '@/utils';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from "react"
 
 const Login = () => {
     const [emailAddress, setEmailAddress] = useState("")
