@@ -43,7 +43,9 @@ const createProduct = async (req, res, next) => {
 
 const getAllProducts = async (req, res, next) => {
     try{
-        const allProds = await prodDB.findAll();
+        const allProds = await prodDB.findAll({
+            order: database.sequelize.col('id')
+        });
         if(allProds){
             res.status(200).json(allProds)
         }else{

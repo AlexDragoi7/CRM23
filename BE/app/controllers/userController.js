@@ -105,7 +105,9 @@ const login = async (req, res) => {
 
 const getAllUsers = async (req, res, next) => {
     try{
-        const authUsers = await users.findAll();
+        const authUsers = await users.findAll({
+            order: database.sequelize.col('id')
+        });
         if(authUsers){
             return res.status(200).json(authUsers);
         }else{
