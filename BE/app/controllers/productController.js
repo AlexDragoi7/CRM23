@@ -1,7 +1,8 @@
 const express = require('express');
 const userAuth = require('../middleware/userAuth');
 const database = require('../models');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+
 
 
 const prodDB = database.products;
@@ -121,6 +122,29 @@ const deleteProduct = async (req, res) => {
     }
 }
 
+// Search product 
+
+const searchProduct = async (req, res) => {
+    try{
+        const searchProdLowerCase = await req.query.product_name.toLowerCase();
+
+        const filteredProd = await prodDB.findAndCountAll({
+            where: {
+                product_name: database.sequelize.where(database.sequelize.fn('LOWER', database.sequelize.col('product_name')), 'LIKE', `%${searchProdLowerCase}%`)
+            }
+        })
+
+        if(filteredProd){
+            res.status(200).json(filteredProd)
+        }else{
+            res.status(404).send("Error")
+        }
+
+    }catch(err){
+        console.error(err)
+    }
+}
+
 // 
 
-module.exports = {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct};
+module.exports = {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct, searchProduct};
