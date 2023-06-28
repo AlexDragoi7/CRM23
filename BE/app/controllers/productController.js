@@ -76,6 +76,7 @@ const updateProduct = async (req, res) => {
     try{
 
         const {product_name, product_description, product_quantity} = req.body;
+        const idIdentifier = req.params
 
         
 
@@ -84,10 +85,15 @@ const updateProduct = async (req, res) => {
             product_description: product_description,
             product_quantity: product_quantity
         }, {
-            where: {id: req.params.id}
+            where: {
+                id:idIdentifier.id
+            }
         })
+        
+       
+        
 
-        if(updatedProd){
+        if(updatedProd[0] != 0){
             res.status(200).json({
                 message: `Product updated`
             })
