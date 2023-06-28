@@ -6,10 +6,11 @@ const userAuth = require('../middleware/userAuth');
 const router = express.Router();
 
 router.post('/', userAuth.isAuthenticated, createProduct);
-// router.get('/', userAuth.isAuthenticated, getAllProducts);
+router.get('/', userAuth.isAuthenticated, getAllProducts);
+router.get("/search", searchProduct);
 router.get('/:id', userAuth.isAuthenticated, getProductById);
 router.patch("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
-router.get("/", userAuth.isAuthenticated, searchProduct);
+
 
 module.exports = router;
