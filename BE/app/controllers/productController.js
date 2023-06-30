@@ -74,6 +74,27 @@ const getProductById = async (req, res, next) => {
     }
 }
 
+const getUserProducts = async (req, res) => {
+    try{
+        const {token} = req.cookies;
+        const verify = jwt.verify(token, process.env.SECRETKEY);
+    
+        const userProducts = await prodDB.findAll({
+            where: {
+                user_id: verify.id
+            }
+        })
+    
+        if(userProducts){
+            res.status(200).json(userProducts)
+        }else{
+            res.status(404).send("User does not have any products available")
+        }
+    }catch(err){
+        console.error(err)
+    }
+}
+
 const updateProduct = async (req, res) => {
     try{
 
@@ -155,4 +176,4 @@ const searchProduct = async (req, res) => {
 
 // 
 
-module.exports = {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct, searchProduct};
+module.exports = {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct, searchProduct, getUserProducts};
