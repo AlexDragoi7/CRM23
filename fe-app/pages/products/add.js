@@ -13,19 +13,25 @@ import {
   Box,
   Textarea,
   Button,
+  Select,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import Layout from "../layout";
+
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
-export default function ProductDetails({ id }) {
+const AddProduct = () => {
   const router = useRouter();
   const toast = useToast();
 
-  const [product, setProduct] = useState({});
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState(null);
+  const [isDescriptionInvalid, setIsDescriptionInvalid] = useState(false);
+  const [isProductNameInvalid, setIsProductNameInvalid] = useState(false);
 
   let token;
 
@@ -36,10 +42,20 @@ export default function ProductDetails({ id }) {
 
   const handleProductName = (event) => {
     setProductName(event.target.value);
+    if (event.target.value.length <= 255) {
+      setIsProductNameInvalid(false);
+    } else {
+      setIsProductNameInvalid(true);
+    }
   };
 
   const handleProductDescription = (event) => {
     setProductDescription(event.target.value);
+    if (event.target.value.length <= 255) {
+      setIsDescriptionInvalid(false);
+    } else {
+      setIsDescriptionInvalid(true);
+    }
   };
 
   const handleProductQuantity = (valueString) => {
@@ -47,19 +63,20 @@ export default function ProductDetails({ id }) {
     setProductQuantity(Number(valueString));
   };
 
-  const getProductData = async () => {
+  const handleCategorySelection = (event) => {
+    setCategoryId(Number(event.target.value));
+  };
+
+  const getCatergories = async () => {
     const config = {
       withCredentials: true,
     };
-
     await axios
-      .get(`http://localhost:3300/products/${id}`, config)
+      .get("http://localhost:3300/categories", config)
       .then((response) => {
         if (response.data) {
-          setProduct(response.data);
-          setProductName(response.data.product_name);
-          setProductDescription(response.data.product_description);
-          setProductQuantity(response.data.product_quantity);
+          setCategories(response.data);
+          console.log(categories);
         }
       })
       .catch((error) => {
@@ -67,29 +84,32 @@ export default function ProductDetails({ id }) {
       });
   };
 
-  const saveProductData = async () => {
+  const addNewProduct = async () => {
     const config = {
       withCredentials: true,
     };
+
     const data = {
       product_name: productName,
       product_description: productDescription,
       product_quantity: productQuantity,
+      category_id: categoryId,
     };
 
     axios
-      .patch(`http://localhost:3300/products/${id}`, data, config)
+      .post(`http://localhost:3300/products`, data, config)
       .then(function (response) {
-        console.log(response);
-        getProductData();
-        toast({
-          title: "Product updated",
-          description: "Your product has been updated",
-          status: "success",
-          position: "top-right",
-          duration: 5000,
-          isClosable: true,
-        });
+        if (response.data.id) {
+          toast({
+            title: "Product created",
+            description: "Your product has been created",
+            status: "success",
+            position: "top-right",
+            duration: 5000,
+            isClosable: true,
+          });
+          router.push("/products");
+        }
       })
       .catch(function (error) {
         console.error(error);
@@ -108,7 +128,7 @@ export default function ProductDetails({ id }) {
     if (!token) {
       router.push("/login");
     } else {
-      getProductData();
+      getCatergories();
     }
   }, [token]);
 
@@ -126,11 +146,14 @@ export default function ProductDetails({ id }) {
         pr="10"
       >
         <Heading size="xl" mb="6">
-          {product.product_name}
+          Add new product
         </Heading>
-        <FormControl mb="8">
+        <FormControl isInvalid={isProductNameInvalid} mb="8">
           <FormLabel>Product name</FormLabel>
           <Input value={productName} onChange={handleProductName} type="text" />
+          <FormErrorMessage>
+            Product name length (max 255) exceeded.
+          </FormErrorMessage>
         </FormControl>
         <FormControl mb="8">
           <FormLabel>Quantity</FormLabel>
@@ -147,13 +170,31 @@ export default function ProductDetails({ id }) {
             </NumberInputStepper>
           </NumberInput>
         </FormControl>
-        <FormControl mb="8">
+        <FormControl isInvalid={isDescriptionInvalid} mb="8">
           <FormLabel>Description</FormLabel>
           <Textarea
             value={productDescription}
             onChange={handleProductDescription}
             size="sm"
           ></Textarea>
+          <FormErrorMessage>
+            Description length (max 255) exceeded.
+          </FormErrorMessage>
+        </FormControl>
+
+        <FormControl mb="8">
+          <FormLabel>Category</FormLabel>
+          <Select
+            placeholder="Select category"
+            value={categoryId}
+            onChange={handleCategorySelection}
+          >
+            {categories.map((category, key) => (
+              <option value={category.id} key={key}>
+                {category.category_name}
+              </option>
+            ))}
+          </Select>
         </FormControl>
         <Button
           mr="6"
@@ -164,19 +205,17 @@ export default function ProductDetails({ id }) {
           {" "}
           Cancel
         </Button>
-        <Button variant="solid" colorScheme="blue" onClick={saveProductData}>
+        <Button variant="solid" colorScheme="blue" onClick={addNewProduct}>
           {" "}
           Save
         </Button>
       </Box>
     </main>
   );
-}
-
-ProductDetails.getInitialProps = ({ query: { id } }) => {
-  return { id };
 };
 
-ProductDetails.getLayout = (page) => {
+AddProduct.getLayout = (page) => {
   return <Layout>{page}</Layout>;
 };
+
+export default AddProduct;
