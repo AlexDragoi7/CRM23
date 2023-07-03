@@ -1,6 +1,8 @@
 # LOGISTIC APPLICATION
 
-Description: Basic template application used to manage a small amount of products, within a simple line of delivery. 
+Description: 
+
+Basic template application used to manage a small amount of products, within a simple line of delivery. 
 
 Functionalities:
 - Login / Sign-up (JWT token)
