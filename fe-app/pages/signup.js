@@ -63,7 +63,6 @@ const Signup = () => {
     axios
       .post(`http://localhost:3300/users/signup`, data)
       .then(function (response) {
-        console.log(response);
         toast({
           title: "Account created",
           description: "Your account has been created",

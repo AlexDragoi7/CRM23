@@ -12,11 +12,31 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-const ProductList = ({ products, openDeleteModal, getProductCategoryName }) => {
+const ProductList = ({
+  products,
+  openDeleteModal,
+  getProductCategoryName,
+  userProducts,
+}) => {
   const router = useRouter();
+  let userID;
+  if (typeof window !== "undefined") {
+    userID = localStorage.getItem("userId");
+  }
+
+  let productsList = [];
+
+  if (userProducts) {
+    productsList = products;
+  } else {
+    productsList = products.filter(
+      (product) => product.user_id !== Number(userID)
+    );
+  }
+
   return (
     <>
-      {products.map((product, key) => (
+      {productsList.map((product, key) => (
         <Card maxW="sm" mb="6" key={key}>
           <CardBody>
             <Image
@@ -39,6 +59,7 @@ const ProductList = ({ products, openDeleteModal, getProductCategoryName }) => {
           <CardFooter>
             <ButtonGroup spacing="2">
               <Button
+                isDisabled={product.user_id !== Number(userID)}
                 variant="outline"
                 colorScheme="blue"
                 onClick={() => router.push(`/products/${product.id}`)}
@@ -46,6 +67,7 @@ const ProductList = ({ products, openDeleteModal, getProductCategoryName }) => {
                 Edit
               </Button>
               <Button
+                isDisabled={product.user_id !== Number(userID)}
                 variant="solid"
                 colorScheme="red"
                 onClick={() => openDeleteModal(product.id)}

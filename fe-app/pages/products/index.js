@@ -14,6 +14,7 @@ import {
   ModalContent,
   ModalOverlay,
   ModalCloseButton,
+  useToast,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 
@@ -22,8 +23,9 @@ import Layout from "../layout";
 import ProductList from "../components/products/ProductsList";
 
 const Products = () => {
-  console.log("page loaded");
   const router = useRouter();
+  const toast = useToast();
+
   const [products, setProducts] = useState([]);
   const [myProducts, setMyProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -33,7 +35,6 @@ const Products = () => {
 
   let token;
   if (typeof window !== "undefined") {
-    // Perform localStorage action
     token = localStorage.getItem("accessToken");
   }
 
@@ -49,7 +50,6 @@ const Products = () => {
     await axios
       .get("http://localhost:3300/products", config)
       .then((response) => {
-        console.log(response);
         if (response.data) {
           setProducts(response.data);
         }
@@ -82,7 +82,6 @@ const Products = () => {
     await axios
       .get("http://localhost:3300/products/myproducts", config)
       .then((response) => {
-        console.log(response);
         if (response.data) {
           setMyProducts(response.data);
         }
@@ -103,13 +102,30 @@ const Products = () => {
         config
       )
       .then((response) => {
-        console.log(response);
-        getMyProducts();
-        getAllProducts();
-        onClose();
+        if (response.status === 200) {
+          onClose();
+          toast({
+            title: "Success",
+            description: "Your product has been deleted.",
+            status: "success",
+            position: "top-right",
+            duration: 5000,
+            isClosable: true,
+          });
+          getMyProducts();
+          getAllProducts();
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Something went wrong.",
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -155,6 +171,7 @@ const Products = () => {
           products={myProducts}
           getProductCategoryName={getProductCategoryName}
           openDeleteModal={openDeleteModal}
+          userProducts={true}
         ></ProductList>
       </SimpleGrid>
 
@@ -169,6 +186,7 @@ const Products = () => {
           products={products}
           getProductCategoryName={getProductCategoryName}
           openDeleteModal={openDeleteModal}
+          userProducts={false}
         ></ProductList>
       </SimpleGrid>
       <Modal isOpen={isOpen} onClose={onClose}>
