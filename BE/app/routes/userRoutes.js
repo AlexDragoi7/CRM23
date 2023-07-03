@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/signup", userAuth.saveUser, signup);
 router.get("/", userAuth.isAuthenticated, getAllUsers)
-router.patch("/resetpassword", userAuth.isAuthenticated, resetPassword)
+router.patch("/resetpassword", resetPassword)
 
 router.post("/login", login);
 

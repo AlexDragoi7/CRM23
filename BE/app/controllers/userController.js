@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 
 
+
 const users = database.users;
 
 const signup = async (req, res) => {
@@ -37,12 +38,8 @@ const signup = async (req, res) => {
 
 const resetPassword = async (req, res) => {
     try{
-        const {new_password} = req.body;
-        
-        const {token} = req.cookies;
-        const verify = await jwt.verify(token, process.env.SECRETKEY)
+        const {new_password, email} = req.body;
 
-    
 
         const data = {
             password: await bcrypt.hash(new_password, 10)
@@ -51,7 +48,7 @@ const resetPassword = async (req, res) => {
         const updatedPass = await users.update({
             password: data.password
         }, {
-            where: {id: verify.id}
+            where: {email: email}
         })
 
         if(updatedPass){
