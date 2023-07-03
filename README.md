@@ -10,7 +10,7 @@ Functionalities:
 - Display all products
 - Managed products - Add / Delete / Edit
 - Display product details, product per authenticated user id and per inventory id
-- Products' categorized by certain areas of utility
+- Products categorized by certain areas of utility
 
 Technology stacks:
 
