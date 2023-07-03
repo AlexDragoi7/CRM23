@@ -76,7 +76,6 @@ const AddProduct = () => {
       .then((response) => {
         if (response.data) {
           setCategories(response.data);
-          console.log(categories);
         }
       })
       .catch((error) => {

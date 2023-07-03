@@ -43,7 +43,6 @@ export default function ProductDetails({ id }) {
   };
 
   const handleProductQuantity = (valueString) => {
-    console.log(Number(valueString));
     setProductQuantity(Number(valueString));
   };
 

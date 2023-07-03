@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Stack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -87,6 +88,14 @@ const Login = () => {
           <Button colorScheme="blue" isDisabled={isDisabled} onClick={login}>
             Login
           </Button>
+          <Stack mt="6" display="flex" alignSelf="right">
+            <Button
+              variant="link"
+              onClick={() => router.push("/reset-password")}
+            >
+              Forgot your password?
+            </Button>
+          </Stack>
         </CardBody>
       </Card>
     </Container>
