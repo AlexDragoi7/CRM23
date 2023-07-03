@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "password",
+    "database": "crmdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "crm",
+    "password": "crm123",
+    "database": "crmdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "crm",
+    "password": "crm123",
+    "database": "crmdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

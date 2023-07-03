@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-color: #EDF2F7 !important
+}
+
+.signup-link{
+  color: blue
+}
